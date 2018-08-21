@@ -1,43 +1,48 @@
 const calcString = (function() {
-  const addDecimal = () => {
-    let hasDecimal = false;
-    return n => {
-      if (!hasDecimal) {
-        hasDecimal = true;
-        return n.length === 0 ? '0.' : `${n}.`;
-      }
-      return n;
-    };
+  function CalcString() {
+    this.num = '';
+    this.decimal = '';
+    this.dec = '';
+    this.hasDecimal = false;
+  }
+
+  CalcString.prototype.add = function(n) {
+    if (n === '.') {
+      this.decimal = '.';
+      if (this.num === '') this.num = '0';
+      this.hasDecimal = true;
+    } else if (this.hasDecimal) {
+      this.dec = this.dec + n;
+    } else {
+      this.num = this.num + n;
+    }
   };
 
-  const addComma = n => {
+  CalcString.prototype.addCommas = function() {
     let str = '';
     let count = 0;
-    let [num, dec] = n.split('.');
 
-    dec = dec !== undefined ? `.${dec}` : '';
-
-    for (let i = num.length - 1; i >= 0; i--) {
+    for (let i = this.num.length - 1; i >= 0; i--) {
       if (count && count % 3 === 0) str = `,${str}`;
-      str = num[i] + str;
+      str = this.num[i] + str;
       count++;
     }
-    return `${str}${dec}`;
+    return this.num.length > 0 ? `${str}` : '';
   };
 
-  const getNum = n => (isNaN(parseFloat(n)) ? 0 : parseFloat(n));
-
-  const calculatorString = () => {
-    let num = '';
-    let decimal = addDecimal();
-    return n => {
-      if (n === undefined) return getNum(num);
-      else if (n === '.') num = decimal(num);
-      else num = num + n;
-
-      return num.length === 0 ? '0' : addComma(num);
-    };
+  CalcString.prototype.createCalcString = function(n = '') {
+    this.add(n);
+    let num = this.addCommas();
+    let str = `${num}${this.decimal}${this.dec}`;
+    return str === '' ? '0' : str;
   };
 
-  return { calculatorString };
+  CalcString.prototype.reset = function() {
+    this.num = '';
+    this.dec = '';
+    this.hasDecimal = false;
+    this.decimal = '';
+  };
+
+  return { CalcString };
 })();
