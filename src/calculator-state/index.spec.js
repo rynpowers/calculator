@@ -77,7 +77,7 @@ describe('calcState object', () => {
     expect(calcPrototype.hasOwnProperty('connect')).toBe(true);
     expect(calcPrototype.hasOwnProperty('updateState')).toBe(true);
   });
-  it('should update state', () => {
+  it('should update and send state', () => {
     calc.add(5);
     calc.add(10);
     numString.add('1');

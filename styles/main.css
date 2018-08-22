@@ -61,3 +61,8 @@ body {
 .btn-zero {
   flex-basis: 8.5rem;
 }
+
+.active {
+  background-color: black;
+  color: white;
+}
