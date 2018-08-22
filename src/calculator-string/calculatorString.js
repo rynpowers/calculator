@@ -1,4 +1,16 @@
-const calcString = (function() {
+const calculatorString = (function() {
+  function addCommas(num) {
+    let str = '';
+    let count = 0;
+
+    for (let i = num.length - 1; i >= 0; i--) {
+      if (count && count % 3 === 0) str = `,${str}`;
+      str = num[i] + str;
+      count++;
+    }
+    return num.length > 0 ? `${str}` : '';
+  }
+
   function CalcString() {
     this.num = '';
     this.decimal = '';
@@ -11,29 +23,15 @@ const calcString = (function() {
       this.decimal = '.';
       if (this.num === '') this.num = '0';
       this.hasDecimal = true;
-    } else if (this.hasDecimal) {
-      this.dec = this.dec + n;
     } else {
-      this.num = this.num + n;
+      [this.dec, this.num] = this.hasDecimal
+        ? [this.dec + n, this.num]
+        : [this.dec, this.num + n];
     }
   };
 
-  CalcString.prototype.addCommas = function() {
-    let str = '';
-    let count = 0;
-
-    for (let i = this.num.length - 1; i >= 0; i--) {
-      if (count && count % 3 === 0) str = `,${str}`;
-      str = this.num[i] + str;
-      count++;
-    }
-    return this.num.length > 0 ? `${str}` : '';
-  };
-
-  CalcString.prototype.createCalcString = function(n = '') {
-    this.add(n);
-    let num = this.addCommas();
-    let str = `${num}${this.decimal}${this.dec}`;
+  CalcString.prototype.getCalcString = function() {
+    let str = `${addCommas(this.num)}${this.decimal}${this.dec}`;
     return str === '' ? '0' : str;
   };
 
