@@ -106,4 +106,27 @@ describe('calculator string', () => {
     expect(calcStr.decimal.length).toBe(0);
     expect(calcStr.hasDecimal).toBe(false);
   });
+  it('should return correct value and type', () => {
+    expect(calcStr.getNumber()).toBe(0);
+    calcStr.add('1');
+    calcStr.add('0');
+    calcStr.add('0');
+    calcStr.add('0');
+    expect(calcStr.getNumber()).toBe(1000);
+    calcStr.add('.');
+    expect(calcStr.getNumber()).toBe(1000);
+    calcStr.add('1');
+    calcStr.add('2');
+    calcStr.add('3');
+    expect(calcStr.getNumber()).toBe(1000.123);
+    expect(typeof calcStr.getNumber()).toBe('number');
+
+    calcStr.reset();
+
+    calcStr.add('.');
+    calcStr.add('.');
+    expect(calcStr.getNumber()).toBe(0);
+    calcStr.add('0');
+    expect(calcStr.getNumber()).toBe(0);
+  });
 });

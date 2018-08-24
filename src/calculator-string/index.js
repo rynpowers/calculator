@@ -35,6 +35,12 @@ const calculatorString = (function() {
     return str === '' ? '0' : str;
   };
 
+  CalcString.prototype.getNumber = function() {
+    let numString = `${this.num}${this.decimal}${this.dec}`;
+    console.log(numString);
+    return numString === '' ? 0 : parseFloat(numString, 10);
+  };
+
   CalcString.prototype.reset = function() {
     this.num = '';
     this.dec = '';
