@@ -1,14 +1,14 @@
 const UI = (function() {
   const array = s => Array.from(document.querySelectorAll(s));
-  const item = s => document.querySelector(s);
+  const elem = s => document.querySelector(s);
 
   const ui = {
     buttons: array('.btn'),
     operators: array('.btn.btn-op'),
     numbers: array('.btn.btn-num'),
-    execute: item('.btn.btn-execute'),
-    clear: item('.btn.btn-clear'),
-    screen: item('.screen'),
+    execute: elem('.btn.btn-execute'),
+    clear: elem('.btn.btn-clear'),
+    screen: elem('.screen'),
     setScreen(val) {
       this.screen.value = val;
     },
