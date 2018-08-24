@@ -45,6 +45,8 @@ const calculatorString = (function() {
     this.dec = '';
     this.hasDecimal = false;
     this.decimal = '';
+
+    return '';
   };
 
   CalcString.prototype.numToString = function(n) {
