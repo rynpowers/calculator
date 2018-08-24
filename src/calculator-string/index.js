@@ -11,10 +11,10 @@ const calculatorString = (function() {
     return num.length > 0 ? `${str}` : '';
   }
 
-  function CalcString() {
-    this.num = '';
-    this.decimal = '';
-    this.dec = '';
+  function CalcString(num = '', decimal = '', dec = '') {
+    this.num = num;
+    this.decimal = decimal;
+    this.dec = dec;
     this.hasDecimal = false;
   }
 
@@ -37,7 +37,6 @@ const calculatorString = (function() {
 
   CalcString.prototype.getNumber = function() {
     let numString = `${this.num}${this.decimal}${this.dec}`;
-    console.log(numString);
     return numString === '' ? 0 : parseFloat(numString, 10);
   };
 
@@ -46,6 +45,12 @@ const calculatorString = (function() {
     this.dec = '';
     this.hasDecimal = false;
     this.decimal = '';
+  };
+
+  CalcString.prototype.numToString = function(n) {
+    let [num, dec] = n.toString().split('.');
+    let decimal = dec ? '.' : '';
+    return new CalcString(num, decimal, dec).getCalcString();
   };
 
   return { CalcString };

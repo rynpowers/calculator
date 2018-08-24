@@ -129,4 +129,11 @@ describe('calculator string', () => {
     calcStr.add('0');
     expect(calcStr.getNumber()).toBe(0);
   });
+  it('should create a calc string from input number', () => {
+    expect(calcStr.numToString(1000)).toBe('1,000');
+    expect(calcStr.numToString(0)).toBe('0');
+    expect(calcStr.numToString(0.2345)).toBe('0.2345');
+    expect(calcStr.numToString(1000.2345)).toBe('1,000.2345');
+    expect(calcStr.numToString(10000000.2345)).toBe('10,000,000.2345');
+  });
 });
