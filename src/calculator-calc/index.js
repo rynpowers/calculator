@@ -1,7 +1,7 @@
 const calculator = (function() {
   function Calculator() {
     this.stack = [];
-    this.storedFn = null;
+    this.storedFn = '';
   }
 
   Calculator.prototype.operators = {
@@ -30,7 +30,7 @@ const calculator = (function() {
   };
   Calculator.prototype.clear = function() {
     this.stack = [];
-    this.storedFn = null;
+    this.storedFn = '';
   };
 
   return { Calculator };

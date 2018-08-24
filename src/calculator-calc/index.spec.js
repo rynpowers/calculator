@@ -81,7 +81,7 @@ describe('calculator', () => {
       it('should clear the stack and stored function prop', () => {
         pushCalc.clear();
         expect(pushCalc.stack.length).toBe(0);
-        expect(pushCalc.storedFn).toBe(null);
+        expect(pushCalc.storedFn).toBe('');
       });
     });
     describe('run', () => {
