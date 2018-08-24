@@ -1,29 +1,29 @@
 const calculatorState = (function() {
   function CalcState() {
-    this.state = {
-      num: '',
-      total: 0,
-      selectedFn: '',
-      power: false,
-      display: '',
-    };
-
-    this.update = [];
-    this.send = [];
+    this.state = {};
   }
-
-  CalcState.prototype.connect = function(prop, ...args) {
-    if (prop === 'send' || prop === 'update') this[prop].push(...args);
+  CalcState.prototype.createState = function(obj) {
+    Object.keys(obj).forEach(key => {
+      this.state[key] = { value: obj[key], func: [] };
+    });
   };
 
-  CalcState.prototype.updateState = function() {
-    this.update.forEach(item => {
-      this.state[item.prop] = item.fn();
+  CalcState.prototype.connect = function(obj) {
+    Object.keys(obj).forEach(key => {
+      let { func } = this.state[key];
+      func.push(...obj[key]);
     });
+  };
 
-    this.send.forEach(item => {
-      item.fn(this.state[item.prop]);
+  CalcState.prototype.update = function(...args) {
+    args.forEach(key => {
+      let { func, value } = this.state[key];
+      func.forEach(f => f(value));
     });
+  };
+
+  CalcState.prototype.setState = function(prop, val) {
+    this.state[prop].value = val;
   };
 
   return { CalcState };

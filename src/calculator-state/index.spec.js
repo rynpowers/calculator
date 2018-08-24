@@ -19,6 +19,9 @@ describe('calcState object', () => {
       getTotal() {
         return this.total;
       },
+      setTotal(val) {
+        this.total = val;
+      },
       reset() {
         this.total = 0;
       },
@@ -48,22 +51,19 @@ describe('calcState object', () => {
       },
     };
 
-    let total = calc.getTotal.bind(calc);
-    let num = numString.getStr.bind(numString);
     let setTotal = ui.setTotal.bind(ui);
+    let calcTotal = calc.setTotal.bind(calc);
     let setNum = ui.setNum.bind(ui);
 
-    state.connect(
-      'update',
-      { fn: total, prop: 'total' },
-      { fn: num, prop: 'num' }
-    );
+    state.createState({
+      num: '',
+      total: 0,
+    });
 
-    state.connect(
-      'send',
-      { fn: setTotal, prop: 'total' },
-      { fn: setNum, prop: 'num' }
-    );
+    state.connect({
+      num: [setNum],
+      total: [setTotal, calcTotal],
+    });
   });
   it('should create a calcState objectt', () => {
     expect(typeof calcState).toBe('object');
@@ -72,10 +72,10 @@ describe('calcState object', () => {
     let calcPrototype = calcState.constructor.prototype;
     expect(calcState.state.hasOwnProperty('num')).toBe(true);
     expect(calcState.state.hasOwnProperty('total')).toBe(true);
-    expect(calcState.state.hasOwnProperty('selectedFn')).toBe(true);
-    expect(calcState.state.hasOwnProperty('power')).toBe(true);
     expect(calcPrototype.hasOwnProperty('connect')).toBe(true);
-    expect(calcPrototype.hasOwnProperty('updateState')).toBe(true);
+    expect(calcPrototype.hasOwnProperty('update')).toBe(true);
+    expect(calcPrototype.hasOwnProperty('setState')).toBe(true);
+    expect(calcPrototype.hasOwnProperty('createState')).toBe(true);
   });
   it('should update and send state', () => {
     calc.add(5);
@@ -84,12 +84,15 @@ describe('calcState object', () => {
     numString.add('2');
     expect(calc.getTotal()).toBe(15);
     expect(numString.getStr()).toBe('12');
-    expect(calcState.state.total).not.toBe(15);
-    expect(calcState.state.num).not.toBe('12');
-    calcState.updateState();
-    expect(calcState.state.total).toBe(15);
-    expect(calcState.state.num).toBe('12');
+    expect(calcState.state.total.value).not.toBe(15);
+    expect(calcState.state.num.value).not.toBe('12');
+    calcState.setState('num', numString.getStr());
+    calcState.setState('total', calc.getTotal());
+    expect(calcState.state.total.value).toBe(15);
+    expect(calcState.state.num.value).toBe('12');
+    calcState.update('total', 'num');
     expect(ui.num).toBe('12');
     expect(ui.total).toBe(15);
+    expect(calc.total).toBe(15);
   });
 });
