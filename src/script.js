@@ -3,7 +3,7 @@ const init = (function({ Calculator }, { CalcString }, { CalcState }, { ui }) {
   let calcStr = new CalcString();
   let calcState = new CalcState();
 
-  const { numbers, operators } = ui;
+  const { numbers, operators, clear } = ui;
 
   let setScreen = ui.setScreen.bind(ui);
   let setFn = calc.setFn.bind(calc);
@@ -12,13 +12,16 @@ const init = (function({ Calculator }, { CalcString }, { CalcState }, { ui }) {
 
   calcState.createState({
     screen: '',
+    string: '',
     storedFn: '',
+    activeFn: '',
     storedNum: 0,
   });
 
   calcState.connect({
     screen: [setScreen],
-    storedFn: [setFn, setActiveFn],
+    storedFn: [setFn],
+    activeFn: [setActiveFn],
     storedNum: [pushNum],
   });
 
@@ -26,16 +29,29 @@ const init = (function({ Calculator }, { CalcString }, { CalcState }, { ui }) {
     number.addEventListener('click', e => {
       calcStr.add(e.target.value);
       calcState.setState('screen', calcStr.getCalcString());
-      calcState.update('screen');
+      calcState.setState('string', calcStr.getCalcString());
+      calcState.setState('activeFn', '');
+      calcState.update('screen', 'storedFn', 'string', 'activeFn');
     });
   });
 
   operators.forEach(operator => {
     operator.addEventListener('click', e => {
+      if (calcState.getState('string')) {
+        calcState.setState('storedNum', calcStr.getNumber());
+        calcState.update('storedNum');
+      }
       calcState.setState('storedFn', e.target.value);
-      calcState.setState('storedNum', calcStr.getNumber());
-      calcState.update('storedFn', 'storedNum');
-      console.log(calc);
+      calcState.setState('activeFn', e.target.value);
+      calcState.update('screen', 'storedFn', 'activeFn');
+
+      calcState.setState('string', calcStr.reset());
+      calcState.setState('screen', calcStr.numToString(calc.value()));
+      calcState.update('screen');
     });
+  });
+
+  clear.addEventListener('click', e => {
+    console.log(e.target.value);
   });
 })(calculator, calculatorString, calculatorState, UI);
