@@ -95,4 +95,8 @@ describe('calcState object', () => {
     expect(ui.total).toBe(15);
     expect(calc.total).toBe(15);
   });
+  it('should return state value', () => {
+    calcState.setState('total', 10);
+    expect(calcState.getState('total')).toBe(10);
+  });
 });

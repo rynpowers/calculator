@@ -26,5 +26,9 @@ const calculatorState = (function() {
     this.state[prop].value = val;
   };
 
+  CalcState.prototype.getState = function(prop) {
+    return this.state[prop].value;
+  };
+
   return { CalcState };
 })();
