@@ -1,29 +1,6 @@
-const init = (function({ Calculator }, { CalcString }, { CalcState }, { ui }) {
-  let calc = new Calculator();
-  let calcStr = new CalcString();
-  let calcState = new CalcState();
-
-  const { numbers, operators, clear } = ui;
-
-  let setScreen = ui.setScreen.bind(ui);
-  let setFn = calc.setFn.bind(calc);
-  let pushNum = calc.push.bind(calc);
-  let setActiveFn = ui.setActiveFn.bind(ui);
-
-  calcState.createState({
-    screen: '',
-    string: '',
-    storedFn: '',
-    activeFn: '',
-    storedNum: 0,
-  });
-
-  calcState.connect({
-    screen: [setScreen],
-    storedFn: [setFn],
-    activeFn: [setActiveFn],
-    storedNum: [pushNum],
-  });
+const init = (function(createApp) {
+  let [calc, calcStr, calcState, ui] = createApp();
+  let { numbers, operators, clear, execute } = ui.elements;
 
   numbers.forEach(number => {
     number.addEventListener('click', e => {
@@ -34,7 +11,6 @@ const init = (function({ Calculator }, { CalcString }, { CalcState }, { ui }) {
       calcState.update('screen', 'storedFn', 'string', 'activeFn');
     });
   });
-
   operators.forEach(operator => {
     operator.addEventListener('click', e => {
       if (calcState.getState('string')) {
@@ -50,8 +26,20 @@ const init = (function({ Calculator }, { CalcString }, { CalcState }, { ui }) {
       calcState.update('screen');
     });
   });
-
   clear.addEventListener('click', e => {
-    console.log(e.target.value);
+    [calc, calcStr, calcState, ui] = createApp();
+    calcState.update('activeFn');
   });
-})(calculator, calculatorString, calculatorState, UI);
+
+  execute.addEventListener('click', () => {
+    if (calcState.getState('string')) {
+      calcState.setState('storedNum', calcStr.getNumber());
+      calcState.update('storedNum', 'screen');
+    } else {
+      calcState.update('storedNum');
+    }
+    calcState.setState('string', calcStr.reset());
+    calcState.setState('screen', calcStr.numToString(calc.value()));
+    calcState.update('screen');
+  });
+})(appConnections);
