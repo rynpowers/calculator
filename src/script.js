@@ -4,42 +4,58 @@ const init = (function(createApp) {
 
   numbers.forEach(number => {
     number.addEventListener('click', e => {
+      let prevListener = calcState.getState('listener');
+
+      if (prevListener === 'execute') calc.clear();
+
       calcStr.add(e.target.value);
-      calcState.setState('screen', calcStr.getCalcString());
-      calcState.setState('string', calcStr.getCalcString());
-      calcState.setState('activeFn', '');
-      calcState.update('screen', 'storedFn', 'string', 'activeFn');
+
+      calcState.setState({
+        screen: calcStr.getCalcString(),
+        activeFn: '',
+      });
+
+      calcState.setState({ listener: 'number' });
     });
   });
   operators.forEach(operator => {
     operator.addEventListener('click', e => {
-      if (calcState.getState('string')) {
-        calcState.setState('storedNum', calcStr.getNumber());
-        calcState.update('storedNum');
-      }
-      calcState.setState('storedFn', e.target.value);
-      calcState.setState('activeFn', e.target.value);
-      calcState.update('screen', 'storedFn', 'activeFn');
+      let prevListener = calcState.getState('listener');
 
-      calcState.setState('string', calcStr.reset());
-      calcState.setState('screen', calcStr.numToString(calc.value()));
-      calcState.update('screen');
+      if (prevListener === 'operator' || prevListener === 'execute') {
+        calcState.setState({
+          activeFn: e.target.value,
+          storedFn: e.target.value,
+        });
+      } else {
+        calcState.setState({
+          number: calcStr.getNumber(),
+          storedFn: e.target.value,
+          activeFn: e.target.value,
+        });
+
+        let total = calc.value();
+        if (total) calcState.setState({ total });
+        calcStr.reset();
+      }
+      calcState.setState({ listener: 'operator' });
     });
   });
   clear.addEventListener('click', e => {
     [calc, calcStr, calcState, ui] = createApp();
-    calcState.update('activeFn');
+    calcState.setState({ activeFn: '' });
   });
 
   execute.addEventListener('click', () => {
-    if (calcState.getState('string')) {
-      calcState.setState('storedNum', calcStr.getNumber());
-      calcState.update('storedNum', 'screen');
-    } else {
-      calcState.update('storedNum');
-    }
-    calcState.setState('string', calcStr.reset());
-    calcState.setState('screen', calcStr.numToString(calc.value()));
-    calcState.update('screen');
+    let number = calcStr.getNumber();
+    let storedFn = calcState.getState('storedFn');
+
+    calcState.setState({ number, storedFn });
+
+    let total = calc.value();
+    if (total) calcState.setState({ total });
+    calcStr.reset();
+
+    calcState.setState({ listener: 'execute' });
   });
 })(appConnections);
