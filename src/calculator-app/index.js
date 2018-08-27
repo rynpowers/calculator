@@ -17,21 +17,22 @@ const appConnections = (function(
 
     calcState.createState({
       screen: '',
-      string: '',
+      number: null,
       storedFn: '',
       activeFn: '',
-      storedNum: 0,
+      total: 0,
+      listener: '',
     });
 
     calcState.connect({
       screen: [setScreen],
       storedFn: [setFn],
       activeFn: [setActiveFn],
-      storedNum: [pushNum],
+      number: [pushNum],
+      total: [setScreen],
     });
 
-    calcState.setState('screen', '0');
-    calcState.update('screen');
+    calcState.setState({ screen: '0' });
 
     return [calc, calcStr, calcState, ui];
   };

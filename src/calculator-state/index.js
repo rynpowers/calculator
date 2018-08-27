@@ -15,15 +15,12 @@ const calculatorState = (function() {
     });
   };
 
-  CalcState.prototype.update = function(...args) {
-    args.forEach(key => {
+  CalcState.prototype.setState = function(obj) {
+    Object.keys(obj).forEach(key => {
+      this.state[key].value = obj[key];
       let { func, value } = this.state[key];
       func.forEach(f => f(value));
     });
-  };
-
-  CalcState.prototype.setState = function(prop, val) {
-    this.state[prop].value = val;
   };
 
   CalcState.prototype.getState = function(prop) {

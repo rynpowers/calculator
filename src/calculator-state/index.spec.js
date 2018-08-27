@@ -86,8 +86,10 @@ describe('calcState object', () => {
     expect(numString.getStr()).toBe('12');
     expect(calcState.state.total.value).not.toBe(15);
     expect(calcState.state.num.value).not.toBe('12');
-    calcState.setState('num', numString.getStr());
-    calcState.setState('total', calc.getTotal());
+    calcState.setState({
+      num: numString.getStr(),
+      total: calc.getTotal(),
+    });
     expect(calcState.state.total.value).toBe(15);
     expect(calcState.state.num.value).toBe('12');
     calcState.update('total', 'num');
@@ -96,7 +98,7 @@ describe('calcState object', () => {
     expect(calc.total).toBe(15);
   });
   it('should return state value', () => {
-    calcState.setState('total', 10);
+    calcState.setState({ total: 10 });
     expect(calcState.getState('total')).toBe(10);
   });
 });
