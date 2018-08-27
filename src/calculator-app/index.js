@@ -4,7 +4,7 @@ const appConnections = (function(
   { CalcState },
   { UI }
 ) {
-  const connectApp = function() {
+  const app = function() {
     let calc = new Calculator();
     let calcStr = new CalcString();
     let calcState = new CalcState();
@@ -17,7 +17,7 @@ const appConnections = (function(
 
     calcState.createState({
       screen: '',
-      number: null,
+      num: null,
       storedFn: '',
       activeFn: '',
       total: 0,
@@ -28,13 +28,19 @@ const appConnections = (function(
       screen: [setScreen],
       storedFn: [setFn],
       activeFn: [setActiveFn],
-      number: [pushNum],
+      num: [pushNum],
       total: [setScreen],
     });
 
-    calcState.setState({ screen: '0' });
+    calcState.setState({ screen: '0', activeFn: '' });
 
-    return [calc, calcStr, calcState, ui];
+    return {
+      calcState,
+      calc,
+      calcStr,
+      ui,
+    };
   };
-  return connectApp;
+
+  return app;
 })(calculator, calculatorString, calculatorState, uiObject);
