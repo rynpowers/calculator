@@ -2,6 +2,7 @@ const calculator = (function() {
   function Calculator() {
     this.stack = [];
     this.storedFn = '';
+    this.active = false;
   }
 
   Calculator.prototype.operators = {
@@ -12,6 +13,7 @@ const calculator = (function() {
   };
 
   Calculator.prototype.run = function() {
+    this.active = true;
     let b = this.stack.pop();
     let a = this.stack.pop();
     this.stack = [this.storedFn(a, b)];
@@ -26,11 +28,12 @@ const calculator = (function() {
     this.storedFn = this.operators[name];
   };
   Calculator.prototype.value = function() {
-    return this.stack.length ? this.stack[0] : 0;
+    return this.stack.length && this.active ? this.stack[0] : null;
   };
   Calculator.prototype.clear = function() {
     this.stack = [];
     this.storedFn = '';
+    this.active = false;
   };
 
   return { Calculator };
