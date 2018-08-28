@@ -10,7 +10,7 @@ const appConnections = (function(
     let calcState = new CalcState();
     let ui = new UI();
 
-    let setScreen = ui.setScreen.bind(ui);
+    let setScreen = ui.setScreen.bind(ui, calcStr.numToString);
     let setFn = calc.setFn.bind(calc);
     let pushNum = calc.push.bind(calc);
     let setActiveFn = ui.setActiveFn.bind(ui);

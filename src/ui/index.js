@@ -10,11 +10,12 @@ const uiObject = (function() {
       execute: elem('.btn.btn-execute'),
       clear: elem('.btn.btn-clear'),
       screen: elem('.screen'),
+      toggleNegative: elem('.btn.btn-toggleNegative'),
     };
   }
 
-  UI.prototype.setScreen = function(val) {
-    this.elements.screen.value = val;
+  UI.prototype.setScreen = function(fn, val) {
+    this.elements.screen.value = typeof val === 'string' ? val : fn(val);
   };
 
   UI.prototype.setActiveFn = function(name) {
