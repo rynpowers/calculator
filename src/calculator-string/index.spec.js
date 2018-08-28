@@ -104,7 +104,6 @@ describe('calculator string', () => {
     expect(calcStr.num.length).toBe(0);
     expect(calcStr.dec.length).toBe(0);
     expect(calcStr.decimal.length).toBe(0);
-    expect(calcStr.hasDecimal).toBe(false);
   });
   it('should return correct value and type', () => {
     expect(calcStr.getNumber()).toBe(0);
@@ -135,5 +134,19 @@ describe('calculator string', () => {
     expect(calcStr.numToString(0.2345)).toBe('0.2345');
     expect(calcStr.numToString(1000.2345)).toBe('1,000.2345');
     expect(calcStr.numToString(10000000.2345)).toBe('10,000,000.2345');
+  });
+  it('should handle negative numbers', () => {
+    calcStr.add('1');
+    calcStr.add('2');
+    calcStr.add('3');
+    calcStr.add('0');
+    calcStr.add('0');
+    calcStr.add('0');
+    calcStr.toggleNegative();
+    expect(calcStr.getCalcString()).toBe('-123,000');
+    expect(calcStr.getNumber()).toBe(-123000);
+    calcStr.toggleNegative();
+    expect(calcStr.getCalcString()).toBe('123,000');
+    expect(calcStr.getNumber()).toBe(123000);
   });
 });

@@ -1,7 +1,7 @@
 const init = (function(app) {
   let { calc, calcState, calcStr, ui } = app();
 
-  const { numbers, operators, clear, execute } = ui.elements;
+  const { numbers, operators, clear, execute, toggleNegative } = ui.elements;
 
   const updateAndCalculate = num => {
     calcState.setState({ num });
@@ -56,5 +56,15 @@ const init = (function(app) {
     if (prevListener !== 'number') num = calcState.getState('num');
     updateAndCalculate(num);
     calcState.setState({ listener });
+  });
+
+  toggleNegative.addEventListener('click', () => {
+    let prevListener = calcState.getState('listener');
+
+    if (prevListener === 'number') {
+      calcStr.toggleNegative();
+      let screen = calcStr.getCalcString();
+      calcState.setState({ screen });
+    }
   });
 })(appConnections);

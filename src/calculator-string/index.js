@@ -11,48 +11,59 @@ const calculatorString = (function() {
     return num.length > 0 ? `${str}` : '';
   }
 
-  function CalcString(num = '', decimal = '', dec = '') {
+  function CalcString(num = '', decimal = '', dec = '', negative = '') {
     this.num = num;
     this.decimal = decimal;
     this.dec = dec;
-    this.hasDecimal = false;
+    this.negative = negative;
   }
 
   CalcString.prototype.add = function(n) {
     if (n === '.') {
       this.decimal = '.';
       if (this.num === '') this.num = '0';
-      this.hasDecimal = true;
     } else {
-      [this.dec, this.num] = this.hasDecimal
+      [this.dec, this.num] = this.decimal
         ? [this.dec + n, this.num]
         : [this.dec, this.num + n];
     }
   };
 
   CalcString.prototype.getCalcString = function() {
-    let str = `${addCommas(this.num)}${this.decimal}${this.dec}`;
+    let { negative, num, decimal, dec } = this;
+    let str = `${negative}${addCommas(num)}${decimal}${dec}`;
+
     return str === '' ? '0' : str;
   };
 
   CalcString.prototype.getNumber = function() {
-    let numString = `${this.num}${this.decimal}${this.dec}`;
+    let { negative, num, decimal, dec } = this;
+    let numString = `${negative}${num}${decimal}${dec}`;
+
     return numString === '' ? 0 : parseFloat(numString, 10);
   };
 
   CalcString.prototype.reset = function() {
     this.num = '';
     this.dec = '';
-    this.hasDecimal = false;
     this.decimal = '';
+    this.negative = '';
 
     return '';
   };
 
   CalcString.prototype.numToString = function(n) {
-    let [num, dec] = n.toString().split('.');
-    let decimal = dec ? '.' : '';
-    return new CalcString(num, decimal, dec).getCalcString();
+    let [negative, num, decimal, dec] = ['', '', '', ''];
+    [num, dec] = n.toString().split('.');
+
+    if (dec) decimal = '.';
+    if (num[0] === '-') [negative, num] = [num[0], num.slice(1)];
+
+    return new CalcString(num, decimal, dec, negative).getCalcString();
+  };
+
+  CalcString.prototype.toggleNegative = function() {
+    this.negative = this.negative === '' ? '-' : '';
   };
 
   return { CalcString };
