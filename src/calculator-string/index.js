@@ -48,18 +48,19 @@ const calculatorString = (function() {
     this.dec = '';
     this.decimal = '';
     this.negative = '';
-
-    return '';
   };
 
-  CalcString.prototype.numToString = function(n) {
+  CalcString.prototype.setCalcString = function(n) {
     let [negative, num, decimal, dec] = ['', '', '', ''];
     [num, dec] = n.toString().split('.');
 
     if (dec) decimal = '.';
     if (num[0] === '-') [negative, num] = [num[0], num.slice(1)];
 
-    return new CalcString(num, decimal, dec, negative).getCalcString();
+    this.num = num;
+    this.decimal = decimal;
+    this.dec = dec || '';
+    this.negative = negative;
   };
 
   CalcString.prototype.toggleNegative = function() {
