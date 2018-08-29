@@ -3,42 +3,35 @@ const init = (function(app) {
 
   const { numbers, operators, clear, execute, toggleNegative } = ui.elements;
 
-  const updateAndCalculate = num => {
-    calcState.setState({ num });
-    let total = calc.value();
-    if (total) calcState.setState({ total });
-    calcStr.reset();
-  };
-
   numbers.forEach(number => {
     number.addEventListener('click', e => {
-      calcStr.add(e.target.value);
-
-      let [prevListener, screen, activeFn, listener] = [
-        calcState.getState('listener'),
-        calcStr.getCalcString(),
-        '',
-        'number',
-      ];
-
+      let prevListener = calcState.getState('listener');
+      if (prevListener !== 'number') calcStr.reset();
       if (prevListener === 'execute') calc.clear();
-      calcState.setState({ screen, activeFn, listener });
+
+      calcStr.add(e.target.value);
+      let screen = calcStr.getCalcString();
+
+      calcState.setState({ screen, listener: 'number', activeFn: '' });
     });
   });
 
   operators.forEach(operator => {
     operator.addEventListener('click', e => {
-      console.log(calcStr);
-      let [prevListener, activeFn, storedFn, num, listener] = [
-        calcState.getState('listener'),
-        e.target.value,
-        e.target.value,
-        calcStr.getNumber(),
-        'operator',
-      ];
+      let prevListener = calcState.getState('listener');
+      let screen = calcState.getState('screen');
+      let listener = 'operator';
+      let storedFn = e.target.value;
+      let activeFn = e.target.value;
 
-      if (prevListener === 'number') updateAndCalculate(num);
-      calcState.setState({ activeFn, storedFn, listener });
+      if (prevListener === '') return;
+      else if (prevListener === 'number') {
+        calcState.setState({ storedNum: calcStr.getNumber() });
+        calcStr.setCalcString(calc.value());
+        screen = calcStr.getCalcString();
+      }
+
+      calcState.setState({ listener, activeFn, storedFn, screen });
     });
   });
 
@@ -47,24 +40,40 @@ const init = (function(app) {
   });
 
   execute.addEventListener('click', () => {
-    let [num, prevListener, listener] = [
-      calcStr.getNumber(),
-      calcState.getState('listener'),
-      'execute',
-    ];
+    let prevListener = calcState.getState('listener');
+    let storedNum = calcState.getState('storedNum');
+    let storedFn = calcState.getState('storedFn');
 
-    if (prevListener !== 'number') num = calcState.getState('num');
-    updateAndCalculate(num);
-    calcState.setState({ listener });
+    if (prevListener === 'number' && storedNum && storedFn) {
+      calcState.setState({ storedNum: calcStr.getNumber() });
+      calcStr.setCalcString(calc.value());
+      calcState.setState({
+        listener: 'execute',
+        screen: calcStr.getCalcString(),
+      });
+    }
   });
 
   toggleNegative.addEventListener('click', () => {
     let prevListener = calcState.getState('listener');
+    let screen = calcState.getState('screen');
 
-    if (prevListener === 'number') {
+    if (prevListener === '') return;
+    else if (prevListener === 'number') {
       calcStr.toggleNegative();
-      let screen = calcStr.getCalcString();
+      screen = calcStr.getCalcString();
       calcState.setState({ screen });
+    } else {
+      calcStr.setCalcString(calc.value());
+      calcStr.toggleNegative();
+      calcState.setState({ screen: calcStr.getCalcString() });
+      calcState.setState({
+        activeFn: '',
+        storedFn: '',
+        storedNum: null,
+        listener: 'number',
+      });
+      calc.clear();
     }
   });
 })(appConnections);
