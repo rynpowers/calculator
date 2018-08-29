@@ -20,6 +20,7 @@ const calculator = (function() {
   };
 
   Calculator.prototype.push = function(val) {
+    if (typeof val !== 'number') return;
     if (this.stack.length === 2) throw new Error('max capacity');
     this.stack.push(val);
     if (this.stack.length === 2 && this.storedFn) this.run();
@@ -28,7 +29,7 @@ const calculator = (function() {
     this.storedFn = this.operators[name];
   };
   Calculator.prototype.value = function() {
-    return this.stack.length && this.active ? this.stack[0] : null;
+    return this.stack[0];
   };
   Calculator.prototype.clear = function() {
     this.stack = [];
