@@ -17,19 +17,17 @@ const appConnections = (function(
 
     calcState.createState({
       screen: '',
-      num: null,
+      storedNum: null,
       storedFn: '',
       activeFn: '',
-      total: 0,
       listener: '',
     });
 
     calcState.connect({
       screen: [setScreen],
+      storedNum: [pushNum],
       storedFn: [setFn],
       activeFn: [setActiveFn],
-      num: [pushNum],
-      total: [setScreen],
     });
 
     calcState.setState({ screen: '0', activeFn: '' });
