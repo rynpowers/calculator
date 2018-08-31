@@ -11,6 +11,7 @@ const uiObject = (function() {
       clear: elem('.btn.btn-clear'),
       screen: elem('.screen'),
       toggleNegative: elem('.btn.btn-toggleNegative'),
+      percent: elem('.btn.btn-percent'),
     };
   }
 

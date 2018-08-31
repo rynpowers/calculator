@@ -1,7 +1,39 @@
 const init = (function(app) {
   let { calc, calcState, calcStr, ui } = app();
 
-  const { numbers, operators, clear, execute, toggleNegative } = ui.elements;
+  const {
+    numbers,
+    operators,
+    clear,
+    execute,
+    toggleNegative,
+    percent,
+  } = ui.elements;
+
+  const auxiliaryFn = fn => {
+    return () => {
+      let prevListener = calcState.getState('listener');
+      let num =
+        prevListener === 'number' ? fn(calcStr.getNumber()) : fn(calc.value());
+
+      if (prevListener === 'number' || prevListener === 'execute') {
+        calcStr.setCalcString(num);
+        calcState.setState({ screen: calcStr.getCalcString() });
+        if (prevListener !== 'number') {
+          calcState.setState({
+            activeFn: '',
+            storedFn: '',
+            storedNum: null,
+            listener: 'number',
+          });
+          calc.clear();
+        }
+      }
+    };
+  };
+
+  const plusMinusHelper = auxiliaryFn(n => n * -1);
+  const percentHelper = auxiliaryFn(n => n / 100);
 
   numbers.forEach(number => {
     number.addEventListener('click', e => {
@@ -54,26 +86,6 @@ const init = (function(app) {
     }
   });
 
-  toggleNegative.addEventListener('click', () => {
-    let prevListener = calcState.getState('listener');
-    let screen = calcState.getState('screen');
-
-    if (prevListener === '') return;
-    else if (prevListener === 'number') {
-      calcStr.toggleNegative();
-      screen = calcStr.getCalcString();
-      calcState.setState({ screen });
-    } else {
-      calcStr.setCalcString(calc.value());
-      calcStr.toggleNegative();
-      calcState.setState({ screen: calcStr.getCalcString() });
-      calcState.setState({
-        activeFn: '',
-        storedFn: '',
-        storedNum: null,
-        listener: 'number',
-      });
-      calc.clear();
-    }
-  });
+  toggleNegative.addEventListener('click', plusMinusHelper);
+  percent.addEventListener('click', percentHelper);
 })(appConnections);
