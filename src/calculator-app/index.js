@@ -2,7 +2,8 @@ const appConnections = (function(
   { Calculator },
   { CalcString },
   { CalcState },
-  { UI }
+  { UI },
+  helpers
 ) {
   const app = function() {
     let calc = new Calculator();
@@ -32,13 +33,29 @@ const appConnections = (function(
 
     calcState.setState({ screen: '0', activeFn: '' });
 
+    const {
+      numberHelper,
+      operatorHelper,
+      executeHelper,
+      percentHelper,
+      plusMinusHelper,
+    } = helpers;
+
+    let onClickNumber = numberHelper.bind(this, calcState, calcStr, calc);
+    let onClickOperator = operatorHelper.bind(this, calcState, calcStr, calc);
+    let onClickExecute = executeHelper.bind(this, calcState, calcStr, calc);
+    let onClickPlusMinus = plusMinusHelper.bind(this, calcState, calcStr, calc);
+    let onClickPercent = percentHelper.bind(this, calcState, calcStr, calc);
+
     return {
-      calcState,
-      calc,
-      calcStr,
+      onClickNumber,
+      onClickOperator,
+      onClickExecute,
+      onClickPlusMinus,
+      onClickPercent,
       ui,
     };
   };
 
   return app;
-})(calculator, calculatorString, calculatorState, uiObject);
+})(calculator, calculatorString, calculatorState, uiObject, helpers);
