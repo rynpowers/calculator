@@ -10,7 +10,7 @@ const uiObject = (function() {
       execute: elem('.btn.btn-execute'),
       clear: elem('.btn.btn-clear'),
       screen: elem('.screen'),
-      toggleNegative: elem('.btn.btn-toggleNegative'),
+      plusMinus: elem('.btn.btn-plusMinus'),
       percent: elem('.btn.btn-percent'),
     };
   }
