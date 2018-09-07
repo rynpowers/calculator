@@ -1,6 +1,6 @@
 const { resolve } = require('path');
 
-module.exports = config => {
+module.exports = () => {
   return {
     context: resolve(__dirname, 'src'),
     entry: './index.js',
